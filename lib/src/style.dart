@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/src/css_parser.dart';
 
+export 'package:flutter_html/src/style/fontsize.dart';
+export 'package:flutter_html/src/style/length.dart';
+export 'package:flutter_html/src/style/lineheight.dart';
 //Export Style value-unit APIs
 export 'package:flutter_html/src/style/margin.dart';
-export 'package:flutter_html/src/style/padding.dart';
-export 'package:flutter_html/src/style/length.dart';
-export 'package:flutter_html/src/style/size.dart';
-export 'package:flutter_html/src/style/fontsize.dart';
-export 'package:flutter_html/src/style/lineheight.dart';
 export 'package:flutter_html/src/style/marker.dart';
+export 'package:flutter_html/src/style/padding.dart';
+export 'package:flutter_html/src/style/size.dart';
 
 ///This class represents all the available CSS attributes
 ///for this package.
@@ -298,6 +298,9 @@ class Style {
   }
 
   TextStyle generateTextStyle() {
+    final LineHeight? height = lineHeight?.units == "length"
+        ? LineHeight(lineHeight!.size! / (fontSize?.value ?? 14) * 1.2)
+        : lineHeight;
     return TextStyle(
       backgroundColor: backgroundColor,
       color: color,
@@ -314,7 +317,7 @@ class Style {
       letterSpacing: letterSpacing,
       shadows: textShadow,
       wordSpacing: wordSpacing,
-      height: lineHeight?.size ?? 1.0,
+      height: height?.size ?? 1.0,
     );
   }
 
@@ -561,9 +564,7 @@ class Style {
 extension _MarginRelativeValues on Margin {
   Margin? getRelativeValue(double remValue, double emValue) {
     double? calculatedValue = calculateRelativeValue(remValue, emValue);
-    if (calculatedValue != null) {
-      return Margin(calculatedValue);
-    }
+    return Margin(calculatedValue);
 
     return null;
   }
@@ -572,9 +573,7 @@ extension _MarginRelativeValues on Margin {
 extension _PaddingRelativeValues on HtmlPadding {
   HtmlPadding? getRelativeValue(double remValue, double emValue) {
     double? calculatedValue = calculateRelativeValue(remValue, emValue);
-    if (calculatedValue != null) {
-      return HtmlPadding(calculatedValue);
-    }
+    return HtmlPadding(calculatedValue);
 
     return null;
   }
